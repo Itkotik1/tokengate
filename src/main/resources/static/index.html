@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TokenGate - Магазин LLM Моделей</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <div class="logo">🛡️ TokenGate</div>
+    <div class="user-info">
+        <span id="user-name-display">Гость</span>
+        <div class="balance-badge">Баланс: <span id="balance-amount">0</span> ₽</div>
+    </div>
+</header>
+
+<main>
+    <!-- Секция Каталога -->
+    <section class="catalog">
+        <h2>Каталог моделей и пакетов</h2>
+        <div id="models-container" class="grid">
+            <!-- Сюда JS будет вставлять карточки -->
+        </div>
+    </section>
+
+    <!-- Секция Корзины -->
+    <section class="cart-section">
+        <h2>Ваша корзина</h2>
+        <div id="cart-container">
+            <p class="empty-cart">Корзина пока пуста</p>
+        </div>
+        <div class="cart-total" id="cart-total-container" style="display: none;">
+            <h3>Итого: <span id="cart-total">0</span> ₽</h3>
+            <button id="checkout-btn" class="btn-primary">Оформить заказ</button>
+        </div>
+    </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
