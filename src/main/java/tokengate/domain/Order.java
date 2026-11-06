@@ -1,7 +1,6 @@
 package tokengate.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore; // Импорт
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import tokengate.exception.BusinessRuleException;
@@ -29,9 +28,8 @@ public class Order {
     @JsonIgnore
     private Customer customer;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    @JsonIgnore
-
+    // Каскадное сохранение и удаление позиций заказа
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
     public void addItem(OrderItem item) {
@@ -44,15 +42,24 @@ public class Order {
         this.totalPrice = items.stream().mapToDouble(OrderItem::getItemTotal).sum();
     }
 
+    public void confirm() {
+        if (this.status != OrderStatus.NEW) {
+            throw new BusinessRuleException("Подтвердить можно только новый заказ (NEW). Текущий статус: " + this.status);
+        }
+        this.status = OrderStatus.CONFIRMED;
+    }
+
+    public void complete() {
+        if (this.status != OrderStatus.CONFIRMED) {
+            throw new BusinessRuleException("Завершить можно только подтвержденный заказ (CONFIRMED). Текущий статус: " + this.status);
+        }
+        this.status = OrderStatus.COMPLETED;
+    }
+
     public void cancel() {
         if (this.status == OrderStatus.COMPLETED || this.status == OrderStatus.CANCELLED) {
             throw new BusinessRuleException("Нельзя отменить заказ в статусе " + this.status);
         }
         this.status = OrderStatus.CANCELLED;
-    }
-
-    @Override
-    public String toString() {
-        return "Order{id=" + id + ", totalPrice=" + totalPrice + ", status=" + status + "}";
     }
 }

@@ -26,6 +26,7 @@ public class Customer {
     private Cart cart;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Order> orders = new ArrayList<>();
 
     public void addOrder(Order order) {
@@ -39,5 +40,9 @@ public class Customer {
         }
         this.balance -= amount;
     }
-
+    public void refundBalance(Double amount) {
+        if (amount > 0) {
+            this.balance += amount;
+        }
+    }
 }

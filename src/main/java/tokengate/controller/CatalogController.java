@@ -8,7 +8,8 @@ import tokengate.domain.LlmModel;
 import tokengate.domain.TokenPackage;
 import tokengate.repository.LlmModelRepository;
 import tokengate.repository.TokenPackageRepository;
-
+import java.util.stream.Collectors;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -33,9 +34,39 @@ public class CatalogController {
     }
 
     // GET /api/packages - получить все пакеты
+    // GET /api/packages - получить пакеты (с фильтрацией и сортировкой)
     @GetMapping("/packages")
-    public List<TokenPackage> getAllPackages() {
-        return packageRepository.findAll();
+    public List<TokenPackage> getAllPackages(
+            @RequestParam(required = false) String modelName,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false, defaultValue = "id") String sortBy) {
+
+        List<TokenPackage> packages = packageRepository.findAll();
+
+        // Фильтрация через Stream API
+        if (modelName != null && !modelName.isEmpty()) {
+            packages = packages.stream()
+                    .filter(p -> p.getModel().getName().toLowerCase().contains(modelName.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+        if (minPrice != null) {
+            packages = packages.stream().filter(p -> p.getPrice() >= minPrice).collect(Collectors.toList());
+        }
+        if (maxPrice != null) {
+            packages = packages.stream().filter(p -> p.getPrice() <= maxPrice).collect(Collectors.toList());
+        }
+
+        // Сортировка
+        if ("price_asc".equals(sortBy)) {
+            packages.sort(Comparator.comparing(TokenPackage::getPrice));
+        } else if ("price_desc".equals(sortBy)) {
+            packages.sort(Comparator.comparing(TokenPackage::getPrice).reversed());
+        } else if ("name".equals(sortBy)) {
+            packages.sort(Comparator.comparing(p -> p.getModel().getName()));
+        }
+
+        return packages;
     }
 
     // POST /api/packages - создать пакет (201 Created)

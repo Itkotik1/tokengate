@@ -1,5 +1,6 @@
 package tokengate.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +14,11 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonIgnore
     private Order order;
+
+    // Важно для возврата на склад при отмене
+    private Long packageId;
 
     private String modelName;
     private Integer tokenAmount;
@@ -21,6 +26,7 @@ public class OrderItem {
     private Integer quantity;
 
     public OrderItem(TokenPackage pkg, Integer quantity) {
+        this.packageId = pkg.getId();
         this.modelName = pkg.getModel().getName();
         this.tokenAmount = pkg.getTokenAmount();
         this.price = pkg.getPrice();

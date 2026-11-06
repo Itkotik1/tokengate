@@ -8,31 +8,63 @@
 </head>
 <body>
 <header>
-    <div class="logo">🛡️ TokenGate</div>
+    <div class="logo">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 2Z" fill="url(#paint0_linear)"/><defs><linearGradient id="paint0_linear" x1="3" y1="2" x2="21" y2="23" gradientUnits="userSpaceOnUse"><stop stop-color="#8B5CF6"/><stop offset="1" stop-color="#3B82F6"/></linearGradient></defs></svg>
+        TokenGate
+    </div>
     <div class="user-info">
-        <span id="user-name-display">Гость</span>
-        <div class="balance-badge">Баланс: <span id="balance-amount">0</span> ₽</div>
+        <div class="user-profile">
+            <span id="user-name-display">Гость</span>
+        </div>
+        <div class="balance-badge">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span id="balance-amount">0.00</span> ₽
+        </div>
     </div>
 </header>
 
 <main>
-    <!-- Секция Каталога -->
     <section class="catalog">
-        <h2>Каталог моделей и пакетов</h2>
+        <div class="catalog-header">
+            <h2>Каталог моделей</h2>
+            <div class="filters">
+                <input type="text" id="search-input" placeholder="Поиск модели...">
+                <select id="sort-select">
+                    <option value="id">По умолчанию</option>
+                    <option value="price_asc">Сначала дешевые</option>
+                    <option value="price_desc">Сначала дорогие</option>
+                    <option value="name">По алфавиту</option>
+                </select>
+            </div>
+        </div>
         <div id="models-container" class="grid">
             <!-- Сюда JS будет вставлять карточки -->
         </div>
     </section>
 
-    <!-- Секция Корзины -->
     <section class="cart-section">
-        <h2>Ваша корзина</h2>
+        <div class="section-header">
+            <h2>Корзина</h2>
+        </div>
         <div id="cart-container">
-            <p class="empty-cart">Корзина пока пуста</p>
+            <p class="empty-state">Ваша корзина пуста</p>
         </div>
         <div class="cart-total" id="cart-total-container" style="display: none;">
-            <h3>Итого: <span id="cart-total">0</span> ₽</h3>
+            <div class="total-row">
+                <span>Итого:</span>
+                <span id="cart-total">0</span> ₽
+            </div>
             <button id="checkout-btn" class="btn-primary">Оформить заказ</button>
+        </div>
+    </section>
+
+    <section class="orders-section">
+        <div class="section-header">
+            <h2>История заказов</h2>
+            <button id="clear-history-btn" class="btn-text" onclick="clearHistory()" style="display: none;">Очистить всё</button>
+        </div>
+        <div id="orders-container">
+            <p class="empty-state">Заказов пока нет</p>
         </div>
     </section>
 </main>
